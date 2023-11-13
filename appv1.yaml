@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+        version: v1.0.0
+    spec:
+      containers:
+        - name: my-app
+          image: nginx:1.9.1
+          ports:
+            - name: http 
+              containerPort: 80 
+          env:
+            - name: VERSION
+              value: v1.0.0
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 5
